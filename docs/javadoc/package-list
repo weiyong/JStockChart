@@ -1,0 +1,9 @@
+org.jstockchart
+org.jstockchart.area
+org.jstockchart.axis
+org.jstockchart.axis.logic
+org.jstockchart.dataset
+org.jstockchart.model
+org.jstockchart.plot
+org.jstockchart.time
+org.jstockchart.util

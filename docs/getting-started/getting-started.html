@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>JStockChart Getting Started</title>
+  <link rel="stylesheet" href="resource/jstockchart.css" />
+</head>
+<body>
+
+<h1>JStockChart Getting Started</h1>
+
+<h2>1. System Requirement</h2>
+<span>
+&nbsp;&nbsp;&nbsp;&nbsp;JDK1.5 or later is required.</span><br>
+
+<h2>2. Download and Installation</h2>
+<span>
+&nbsp;&nbsp;&nbsp;&nbsp;You can download the latest <a href="http://code.google.com/p/jstockchart">JStockChart</a> version from
+<a href="http://code.google.com/p/jstockchart">http://code.google.com/p/jstockchart</a>, now, the version is 0.4.2.</span><br>
+<span>
+&nbsp;&nbsp;&nbsp;&nbsp;Unzips the JStockChart zip file(<code>jstockchart-0.4.3.zip</code>), and adds
+<code>jstockchart-0.4.3.jar</code>, <code>jcommon-1.0.16.jar</code> and <code>jfreechart-1.0.13.jar</code> to
+your classpath.</span>
+
+<br>
+
+<h2>3. Example</h2>
+<span>
+&nbsp;&nbsp;&nbsp;&nbsp;There is a demo directory that contains a simple example application in
+the JStockChart distribution, the example indicates how to use
+JStockChart to create timeseries charts. Executes "<code>run.sh</code>"(Linux) or
+"<code>run.bat</code>"(Windows) to run the example application. The key codes and
+description are the followings:</span><br>
+
+<pre>public class TimeseriesChartDemo {<br><br>	public static void main(String[] args) throws IOException {<br>		// ...<br><br>		// Creates a List instance that includes TimeseriesItem instance.<br>		// Note: All of data must be in a same date.<br>		List data = ...;<br><br>		// Creates a SegmentedTimeline instance, the time scope is "09:30-11:30, 13:00-15:00".<br>		SegmentedTimeline timeline = new SegmentedTimeline(<br>				SegmentedTimeline.MINUTE_SEGMENT_SIZE, 1351, 89);<br>		timeline.setStartTime(SegmentedTimeline.firstMondayAfter1900()<br>				+ 780 * SegmentedTimeline.MINUTE_SEGMENT_SIZE);<br><br>		// Creates TimeseriesDataset instance, the time step is one minute.<br>		TimeseriesDataset dataset = new TimeseriesDataset(Minute.class, 1, timeline, true);<br>		// Adds the TimeseriesItem list to the dataset.<br>		dataset.addDataItems(data);<br><br>		// Creates logic date axis. The central price to 21, the tick count is 9, the price label format is ".00".<br>		CentralValueAxis fixedPriceAxis = new CentralValueAxis(new Double("21"), new Range(<br>				dataset.getMinPrice().doubleValue(), dataset.getMaxPrice().doubleValue()),<br>				9, new DecimalFormat(".00"));<br>		// Creates price area.<br>		PriceArea priceArea = new PriceArea(fixedPriceAxis);<br><br>		// Creates logic volume axis. the tick count is 5, the price label format is "0".<br>		FixedNumberAxis fixedVolumeAxis = new FixedNumberAxis(new Range(dataset<br>				.getMinVolume().doubleValue(), dataset.getMaxVolume()<br>				.doubleValue()), 5, new DecimalFormat("0"));<br>		// Creates volume area.<br>		VolumeArea volumeArea = new VolumeArea(fixedVolumeAxis);<br><br>		// Creates timeseries area.<br>		TimeseriesArea timeseriesArea = new TimeseriesArea(priceArea,<br>				volumeArea, createFixedDateAxis(DateUtils.createDate(2008, 1, 1)));<br><br>		// Creates JFreeChart instance by JStockChartFactory method.<br>		// The chart title is "Timeseries Chart Demo"; doesn't generate legend.<br>		JFreeChart jfreechart = JStockChartFactory.createTimeseriesChart(<br>				"Timeseries Chart Demo", dataset, timeline, timeseriesArea, false);<br><br>		...<br><br>		// Create image file. The image format is PNG; the width is 545, the height is 300.<br>		ChartUtilities.saveChartAsPNG(new File(imageFile), jfreechart, 545, 300);<br>	}<br><br>	// Specify logic date tick.<br>	private static FixedDateAxis createFixedDateAxis(Date baseDate) {<br>		FixedDateAxis fixedDateAxis = new FixedDateAxis(baseDate,<br>				new SimpleDateFormat("HH:mm"));<br>		fixedDateAxis.addDateTick("09:30", TickAlignment.START);<br>		fixedDateAxis.addDateTick("10:00");<br>		fixedDateAxis.addDateTick("10:30");<br>		fixedDateAxis.addDateTick("11:00");<br>		fixedDateAxis.addDateTick("11:30", TickAlignment.END);<br>		fixedDateAxis.addDateTick("13:00", TickAlignment.START);<br>		fixedDateAxis.addDateTick("13:30");<br>		fixedDateAxis.addDateTick("14:00");<br>		fixedDateAxis.addDateTick("14:30");<br>		fixedDateAxis.addDateTick("15:00", TickAlignment.END);<br>		return fixedDateAxis;<br>	}<br>}<br></pre>
+Executes the above example, you could see the following image:<br>
+<img src="resource/jstockchart-timeseries.png"></img>
+
+<h2>4. Customising Chart</h2>
+<span>
+&nbsp;&nbsp;&nbsp;&nbsp;Because JFreeChart is very flexible, then you can get every chart
+element, say Plot, from JFreeChart instance, and customise their
+properties. Please see JFreeChart document and forum for more details.</span><br>
+<span>
+&nbsp;&nbsp;&nbsp;&nbsp;Additionally, you can directly customise several properties when
+creating JStockChart <code>XXXArea</code> instances. For example, you can set price
+line color(<code>PriceArea.setPriceColor</code>); set average line color
+(<code>PriceArea.setAverageColor</code>); ... Please see JStockChart API document for more
+details.</span><br><br>
+</body>
+</html>
